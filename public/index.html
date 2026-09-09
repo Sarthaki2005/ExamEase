@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExamEase — Online Examination &amp; Evaluation System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F2E8;
+  --paper-raised:#FFFFFE;
+  --ink:#1C2340;
+  --ink-soft:#565F82;
+  --ink-faint:#9096B0;
+  --line:#DDD5C0;
+  --line-soft:#E9E3D3;
+  --accent:#C1431D;
+  --accent-soft:#F3DCC9;
+  --accent-deep:#8F2D10;
+  --success:#2E6B4E;
+  --success-soft:#DCEAE0;
+  --warn:#A9761E;
+  --warn-soft:#F3E6C4;
+  --danger:#B23A2E;
+  --danger-soft:#F5DEDA;
+  --mono:'JetBrains Mono', monospace;
+  --serif:'Fraunces', serif;
+  --sans:'Inter', sans-serif;
+  --radius:10px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+::selection{background:var(--accent-soft);}
+a{color:var(--accent-deep);}
+.hidden{display:none !important;}
+.mono{font-family:var(--mono);}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-deep);font-weight:600;}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600;font-family:var(--mono);letter-spacing:0.02em;}
+.pill.success{background:var(--success-soft);color:var(--success);}
+.pill.warn{background:var(--warn-soft);color:var(--warn);}
+.pill.danger{background:var(--danger-soft);color:var(--danger);}
+.pill.neutral{background:var(--line-soft);color:var(--ink-soft);}
+.btn{border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:transform .12s ease, box-shadow .12s ease;}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 0 rgba(28,35,64,0.15);}
+.btn:active{transform:translateY(0);box-shadow:none;}
+.btn.primary{background:var(--accent);border-color:var(--accent-deep);}
+.btn.primary:hover{box-shadow:0 4px 0 var(--accent-deep);}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+.btn.ghost:hover{box-shadow:0 4px 0 var(--line);border-color:var(--ink-faint);}
+.btn.danger{background:var(--danger);border-color:#7c261d;}
+.btn.small{padding:6px 12px;font-size:12.5px;border-radius:6px;}
+.btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
+.card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;}
+.field input, .field select, .field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:7px;font-size:14px;color:var(--ink);background:var(--paper-raised);}
+.field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+.field textarea{resize:vertical;min-height:80px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.login-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px;background:radial-gradient(circle at 10% 10%, rgba(193,67,29,0.06), transparent 40%),radial-gradient(circle at 90% 90%, rgba(28,35,64,0.05), transparent 40%),var(--paper);}
+.login-wrap{width:100%;max-width:420px;}
+.brand-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:22px;}
+.brand-mark{width:34px;height:34px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center;color:var(--accent);font-family:var(--serif);font-weight:700;font-size:17px;transform:rotate(-3deg);}
+.brand-name{font-family:var(--serif);font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.login-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:30px 28px 26px;box-shadow:0 24px 48px -24px rgba(28,35,64,0.25);}
+.login-title{font-family:var(--serif);font-size:26px;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em;}
+.login-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 22px;}
+.pw-wrap{position:relative;}
+.pw-wrap button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--ink-faint);font-size:12px;}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.role-btn{border:1.5px solid var(--line);background:var(--paper-raised);border-radius:9px;padding:12px 6px;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+.role-btn .ic{font-size:18px;display:block;margin-bottom:4px;}
+.role-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-deep);}
+.login-foot{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);text-align:center;font-size:11.5px;color:var(--ink-faint);}
+.demo-note{margin-top:14px;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--accent-deep);line-height:1.5;}
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:230px;flex-shrink:0;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh;}
+.sb-brand{display:flex;align-items:center;gap:9px;padding:4px 6px 20px;}
+.sb-brand .brand-mark{background:var(--accent);color:var(--ink);width:28px;height:28px;font-size:14px;border-radius:6px;}
+.sb-brand span{font-family:var(--serif);font-size:16.5px;font-weight:600;}
+.sb-user{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.06);padding:9px 10px;border-radius:8px;margin-bottom:18px;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex-shrink:0;}
+.sb-user-name{font-size:12.5px;font-weight:600;line-height:1.3;}
+.sb-user-role{font-size:10.5px;color:#B7BCD6;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;font-size:13.5px;font-weight:500;color:#C7CBE3;margin-bottom:2px;position:relative;}
+.nav-item .tick{width:6px;height:6px;border-radius:50%;background:transparent;flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.nav-item.active{background:rgba(193,67,29,0.18);color:#fff;}
+.nav-item.active .tick{background:var(--accent);}
+.sb-spacer{flex:1;}
+.sb-logout{margin-top:10px;}
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 30px;border-bottom:1px solid var(--line);background:var(--paper-raised);position:sticky;top:0;z-index:5;}
+.topbar h1{font-family:var(--serif);font-size:21px;margin:0;font-weight:600;letter-spacing:-0.01em;}
+.topbar .sub{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+.content{padding:26px 30px 60px;max-width:1200px;}
+.section-title{font-family:var(--serif);font-size:17px;font-weight:600;margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:10px;padding:16px 16px;}
+.stat-card .num{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--ink);}
+.stat-card .lbl{font-size:11.5px;color:var(--ink-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);padding:9px 10px;border-bottom:1.5px solid var(--line);font-weight:600;}
+td{padding:11px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.table-wrap{background:var(--paper-raised);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.icon-btn{background:none;border:none;color:var(--ink-soft);font-size:14px;padding:5px;border-radius:5px;}
+.icon-btn:hover{background:var(--line-soft);color:var(--ink);}
+.exam-list{display:flex;flex-direction:column;gap:10px;}
+.exam-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--paper-raised);border:1px solid var(--line);border-radius:10px;padding:15px 18px;}
+.exam-row .exam-meta{font-size:12px;color:var(--ink-soft);margin-top:3px;font-family:var(--mono);}
+.exam-row h3{margin:0;font-family:var(--serif);font-size:16px;font-weight:600;}
+.exam-row-left{display:flex;align-items:center;gap:14px;}
+.exam-badge{width:38px;height:38px;border-radius:8px;background:var(--accent-soft);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:14px;flex-shrink:0;}
+.modal-overlay{position:fixed;inset:0;background:rgba(28,35,64,0.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:var(--paper-raised);border-radius:14px;padding:24px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,0.35);}
+.modal h2{font-family:var(--serif);margin:0 0 4px;font-size:19px;}
+.modal .modal-sub{font-size:12.5px;color:var(--ink-soft);margin:0 0 18px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:11px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;display:flex;align-items:center;gap:8px;box-shadow:0 10px 30px -8px rgba(0,0,0,0.4);}
+.toast .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+.exam-shell{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start;}
+.nav-panel{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:16px;position:sticky;top:90px;}
+.progress-track{height:6px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin:8px 0 4px;}
+.progress-fill{height:100%;background:var(--accent);}
+.qnav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px;}
+.qnav-btn{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink-soft);}
+.qnav-btn.answered{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.qnav-btn.current{outline:2px solid var(--accent);outline-offset:2px;}
+.qnav-legend{display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--ink-soft);}
+.qnav-legend span{display:flex;align-items:center;gap:5px;}
+.legend-dot{width:9px;height:9px;border-radius:2px;}
+.timer-box{background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.timer-box .t{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:0.02em;}
+.timer-box.low{background:var(--danger);}
+.question-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:26px 28px;}
+.q-tag{font-family:var(--mono);font-size:11px;color:var(--accent-deep);background:var(--accent-soft);display:inline-block;padding:4px 10px;border-radius:6px;margin-bottom:14px;font-weight:600;}
+.q-text{font-family:var(--serif);font-size:19px;font-weight:500;line-height:1.5;margin:0 0 22px;}
+.option{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:9px;padding:13px 16px;margin-bottom:10px;font-size:14.5px;}
+.option:hover{border-color:var(--ink-faint);}
+.option.selected{border-color:var(--accent);background:var(--accent-soft);}
+.option .radio{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--ink-faint);flex-shrink:0;position:relative;}
+.option.selected .radio{border-color:var(--accent);}
+.option.selected .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent);}
+.exam-nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:22px;}
+.perf-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;}
+.donut{position:relative;width:150px;height:150px;}
+.donut svg{transform:rotate(-90deg);}
+.donut-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-label .pct{font-family:var(--serif);font-size:28px;font-weight:700;}
+.donut-label .frac{font-size:11px;color:var(--ink-soft);font-family:var(--mono);}
+.grade-chip{margin-top:12px;background:var(--success-soft);color:var(--success);font-family:var(--mono);font-weight:700;padding:5px 14px;border-radius:99px;font-size:13px;}
+.subject-bar-row{margin-bottom:10px;}
+.subject-bar-row .sb-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;font-weight:600;}
+.subject-bar-track{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden;}
+.subject-bar-fill{height:100%;background:var(--accent);border-radius:99px;}
+.feedback-box{border-radius:9px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.55;}
+.feedback-box.good{background:var(--success-soft);color:#204936;}
+.feedback-box.improve{background:var(--warn-soft);color:#5c421a;}
+.feedback-box b{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px;font-family:var(--mono);}
+.empty-state{text-align:center;padding:50px 20px;color:var(--ink-soft);}
+.empty-state .ic{font-size:30px;margin-bottom:10px;}
+.proctor-box{background:#12162b;border-radius:10px;padding:8px;margin-bottom:14px;}
+.proctor-video{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:7px;background:#000;display:block;}
+.proctor-placeholder{width:100%;aspect-ratio:4/3;border-radius:7px;background:#000;display:flex;align-items:center;justify-content:center;color:#B7BCD6;font-size:11px;text-align:center;padding:10px;line-height:1.4;}
+.proctor-status{display:flex;align-items:center;gap:6px;font-size:10.5px;margin-top:7px;color:#B7BCD6;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.04em;}
+.proctor-status .dot{width:7px;height:7px;border-radius:50%;background:var(--danger);flex-shrink:0;animation:proctor-pulse 1.4s infinite;}
+.proctor-status.off .dot{background:var(--ink-faint);animation:none;}
+@keyframes proctor-pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+.tabwatch-pill{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;font-family:var(--mono);color:var(--ink-soft);background:var(--line-soft);border-radius:7px;padding:8px 10px;margin-top:10px;}
+.tabwatch-pill.flagged{background:var(--danger-soft);color:var(--danger);}
+.proctor-warning-banner{background:var(--danger-soft);border:1.5px solid var(--danger);color:var(--danger);border-radius:9px;padding:12px 16px;margin-bottom:16px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px;}
+.proctor-warning-banner .ic{font-size:18px;flex-shrink:0;}
+@media(max-width:880px){
+  .sidebar{position:fixed;left:-240px;transition:left .2s ease;z-index:50;}
+  .sidebar.open{left:0;}
+  .exam-shell{grid-template-columns:1fr;}
+  .nav-panel{position:static;}
+  .perf-grid{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .content{padding:20px 16px 50px;}
+  .topbar{padding:14px 16px;}
+}
+</style>
+</head>
+<body>
+<div id="app"><div style="padding:60px;text-align:center;color:#565F82;font-family:sans-serif;">Loading ExamEase…</div></div>
+
+<script>
+/* ============================================================
+   ExamEase — frontend (talks to the real backend over /api)
+   ============================================================ */
+
+const API_BASE = '/api';
+function getToken(){ return localStorage.getItem('examease_token'); }
+
+async function apiFetch(path, opts={}){
+  const headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{});
+  const token = getToken();
+  if(token) headers['Authorization'] = 'Bearer '+token;
+  let res;
+  try{
+    res = await fetch(API_BASE+path, Object.assign({}, opts, {headers}));
+  }catch(e){
+    throw new Error('Could not reach the server. Is it running?');
+  }
+  if(res.status===401){
+    localStorage.removeItem('examease_token');
+    localStorage.removeItem('examease_user');
+    state.user = null; state.view = 'login';
+    render();
+    throw new Error('Your session expired — please sign in again.');
+  }
+  let data = null;
+  try{ data = await res.json(); }catch(e){ /* no body */ }
+  if(!res.ok){ throw new Error((data && data.error) || ('Request failed ('+res.status+')')); }
+  return data;
+}
+
+/* ---------------- local caches (populated from the API) ---------------- */
+let questionBank = [];
+let exams = [];
+let evaluationQueue = [];
+let systemUsers = [];
+let proctoringLog = [];
+let monitorPollId = null;
+
+const SEED_USERNAMES = { student:'alex.johnson', faculty:'r.mehta', admin:'admin' };
+
+/* ---------------- app state ---------------- */
+const state = {
+  user:null,
+  view:'login',
+  loginRole:'student',
+  showPw:false,
+  examSession:null,
+  lastResult:null,
+  studentResultsList:[],
+  toast:null,
+  toastTimer:null,
+  modal:null,
+  busy:false,
+};
+
+function uidLocal(prefix){ return prefix + Math.random().toString(36).slice(2,8); }
+
+function showToast(msg){
+  state.toast = msg;
+  render();
+  clearTimeout(state.toastTimer);
+  state.toastTimer = setTimeout(()=>{ state.toast=null; render(); }, 2800);
+}
+
+/* ---------------- render root ---------------- */
+function render(){
+  const app = document.getElementById('app');
+  if(!state.user){
+    app.innerHTML = renderLogin();
+  } else {
+    app.innerHTML = renderShell();
+  }
+  if(state.modal){ app.insertAdjacentHTML('beforeend', renderModal()); }
+  if(state.toast){ app.insertAdjacentHTML('beforeend', `<div class="toast"><span class="dot"></span>${state.toast}</div>`); }
+  bindEvents();
+  if(state.view==='student-exam') attachProctorVideo();
+}
+
+/* ================= LOGIN ================= */
+function renderLogin(){
+  const roles = [
+    {k:'student', ic:'🎓', label:'Student'},
+    {k:'faculty', ic:'💼', label:'Faculty'},
+    {k:'admin', ic:'🛡️', label:'Admin'},
+  ];
+  return `
+  <div class="login-shell">
+    <div class="login-wrap">
+      <div class="brand-row"><div class="brand-mark">Ex</div><div class="brand-name">ExamEase</div></div>
+      <div class="login-card">
+        <h1 class="login-title">Sign in</h1>
+        <p class="login-sub">Evaluation Management Portal</p>
+        <div class="field">
+          <label>Institutional ID</label>
+          <input id="login-username" type="text" placeholder="e.g. alex.johnson" value="${SEED_USERNAMES[state.loginRole]}">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input id="login-password" type="${state.showPw?'text':'password'}" placeholder="Enter your password" value="demo1234">
+            <button type="button" data-action="toggle-pw">${state.showPw?'HIDE':'SHOW'}</button>
+          </div>
+        </div>
+        <label class="field" style="margin-bottom:8px;"><span style="display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;">Select your role</span></label>
+        <div class="role-grid">
+          ${roles.map(r=>`<button type="button" class="role-btn ${state.loginRole===r.k?'active':''}" data-action="set-role" data-role="${r.k}"><span class="ic">${r.ic}</span>${r.label}</button>`).join('')}
+        </div>
+        <button class="btn primary" style="width:100%;justify-content:center;" data-action="login" ${state.busy?'disabled':''}>${state.busy?'Signing in…':'Login to System →'}</button>
+        <div class="demo-note">Seeded demo accounts (password <b>demo1234</b>): alex.johnson / priya.nair (student), r.mehta (faculty), admin (admin).</div>
+      </div>
+      <div class="login-foot">Secure SSL encrypted environment · ExamEase © 2026</div>
+    </div>
+  </div>`;
+}
+
+/* ================= SHELL (logged-in) ================= */
+function renderShell(){
+  const role = state.user.role;
+  const navItems = navForRole(role);
+  return `
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="brand-mark">Ex</div><span>ExamEase</span></div>
+      <div class="sb-user">
+        <div class="sb-avatar">${initials(state.user.name)}</div>
+        <div><div class="sb-user-name">${state.user.name}</div><div class="sb-user-role">${role}</div></div>
+      </div>
+      ${navItems.map(n=>`<div class="nav-item ${state.view===n.view?'active':''}" data-action="nav" data-view="${n.view}"><span class="tick"></span>${n.icon} ${n.label}</div>`).join('')}
+      <div class="sb-spacer"></div>
+      <div class="nav-item sb-logout" data-action="logout">↩ Sign out</div>
+    </aside>
+    <div class="main">
+      ${renderTopbar()}
+      <div class="content">${renderView()}</div>
+    </div>
+  </div>`;
+}
+function initials(name){ return name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase(); }
+function navForRole(role){
+  if(role==='student') return [
+    {view:'student-dashboard', label:'My Exams', icon:'📘'},
+    {view:'student-results', label:'Results', icon:'📊'},
+  ];
+  if(role==='faculty') return [
+    {view:'faculty-dashboard', label:'Overview', icon:'🗂'},
+    {view:'faculty-questions', label:'Question Bank', icon:'❓'},
+    {view:'faculty-createexam', label:'Create Exam', icon:'📝'},
+    {view:'faculty-evaluate', label:'Evaluate Answers', icon:'✒️'},
+    {view:'faculty-monitoring', label:'Live Monitoring', icon:'🎥'},
+  ];
+  return [
+    {view:'admin-dashboard', label:'Overview', icon:'🏛'},
+    {view:'admin-users', label:'Manage Users', icon:'👥'},
+    {view:'admin-schedule', label:'Schedule Exams', icon:'🗓'},
+    {view:'admin-status', label:'Exam Status', icon:'📈'},
+  ];
+}
+const TITLES = {
+  'student-dashboard':['My Exams','Attempt scheduled examinations and track progress'],
+  'student-exam':['Exam in progress','Answer carefully — your responses auto-save'],
+  'student-result':['Exam Performance Summary','Detailed breakdown of your result'],
+  'student-results':['My Results','All your completed examinations'],
+  'faculty-dashboard':['Faculty Overview','Question banks, exams and evaluations at a glance'],
+  'faculty-questions':['Question Bank','Create, edit and remove questions'],
+  'faculty-createexam':['Create Examination','Define rules and select questions'],
+  'faculty-evaluate':['Manual Evaluation','Grade descriptive answers and leave feedback'],
+  'faculty-monitoring':['Live Monitoring','Camera status and tab/app-switch activity during attempts'],
+  'admin-dashboard':['Administrator Dashboard','Manage your examination and evaluation system'],
+  'admin-users':['Manage Users','Add, edit or remove student and faculty accounts'],
+  'admin-schedule':['Schedule Examination','Set up exam dates, durations and parameters'],
+  'admin-status':['Exam Status','Monitor live progress and review completed assessments'],
+};
+function renderTopbar(){
+  const t = TITLES[state.view] || ['ExamEase',''];
+  return `<div class="topbar"><div><h1>${t[0]}</h1><div class="sub">${t[1]}</div></div></div>`;
+}
+
+function renderView(){
+  switch(state.view){
+    case 'student-dashboard': return studentDashboard();
+    case 'student-exam': return studentExam();
+    case 'student-result': return studentResult();
+    case 'student-results': return studentResults();
+    case 'faculty-dashboard': return facultyDashboard();
+    case 'faculty-questions': return facultyQuestions();
+    case 'faculty-createexam': return facultyCreateExam();
+    case 'faculty-evaluate': return facultyEvaluate();
+    case 'faculty-monitoring': return facultyMonitoring();
+    case 'admin-dashboard': return adminDashboard();
+    case 'admin-users': return adminUsers();
+    case 'admin-schedule': return adminSchedule();
+    case 'admin-status': return adminStatus();
+    default: return '';
+  }
+}
+
+/* ================= STUDENT ================= */
+function studentDashboard(){
+  const availableNow = exams.filter(e=> e.status==='Active' && !(e.myAttempt && e.myAttempt.status==='submitted'));
+  const upcoming = exams.filter(e=> e.status==='Scheduled');
+  const finished = exams.filter(e=> e.myAttempt && e.myAttempt.status==='submitted');
+  const rows = (list, kind)=> list.map(e=>`
+    <div class="exam-row">
+      <div class="exam-row-left">
+        <div class="exam-badge">${e.subject.slice(0,2).toUpperCase()}</div>
+        <div><h3>${e.title}</h3><div class="exam-meta">${e.subject} · ${e.duration} min · ${e.totalMarks} marks · ${fmtDate(e.schedule)}</div></div>
+      </div>
+      ${kind==='active' ? `<button class="btn primary small" data-action="start-exam" data-id="${e.id}">Attempt →</button>` : ''}
+      ${kind==='scheduled' ? `<span class="pill warn">Not yet open</span>` : ''}
+      ${kind==='completed' ? `<button class="btn ghost small" data-action="view-result" data-attemptid="${e.myAttempt.id}">View Result</button>` : ''}
+    </div>`).join('');
+  return `
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">${availableNow.length}</div><div class="lbl">Active now</div></div>
+      <div class="stat-card"><div class="num">${upcoming.length}</div><div class="lbl">Upcoming</div></div>
+      <div class="stat-card"><div class="num">${finished.length}</div><div class="lbl">Completed</div></div>
+      <div class="stat-card"><div class="num">${exams.length}</div><div class="lbl">Total exams</div></div>
+    </div>
+    ${availableNow.length? `<div class="section-title">🟢 Active examinations</div><div class="exam-list" style="margin-bottom:26px;">${rows(availableNow,'active')}</div>`:''}
+    ${upcoming.length? `<div class="section-title">🗓 Upcoming</div><div class="exam-list" style="margin-bottom:26px;">${rows(upcoming,'scheduled')}</div>`:''}
+    ${finished.length? `<div class="section-title">✅ Completed</div><div class="exam-list">${rows(finished,'completed')}</div>`:''}
+    ${!availableNow.length && !upcoming.length && !finished.length ? `<div class="empty-state"><div class="ic">📘</div>No exams yet. Check back once your faculty schedules one.</div>` : ''}
+  `;
+}
+
+function fmtDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return iso; // seed/free-text values that aren't parseable dates — show as-is
+  return d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function studentResults(){
+  const list = state.studentResultsList || [];
+  if(!list.length) return `<div class="empty-state"><div class="ic">📊</div>No results published yet.</div>`;
+  return `<div class="exam-list">${list.map(a=>{
+    const pct = a.total? Math.round((a.obtained/a.total)*100):0;
+    return `<div class="exam-row">
+      <div class="exam-row-left">
+        <div class="exam-badge">${pct}%</div>
+        <div><h3>${a.examTitle}</h3><div class="exam-meta">${a.subject} · Submitted ${fmtDate(a.submittedAt)}</div></div>
+      </div>
+      <button class="btn ghost small" data-action="view-result" data-attemptid="${a.attemptId}">View Details</button>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+async function startExam(examId){
+  requestExamFullscreen(); // called synchronously within the click gesture, before any await
+  try{
+    const data = await apiFetch('/exams/'+examId+'/questions');
+    state.examSession = {
+      examId, exam: data.exam, questions: data.questions, answers:data.answers || {}, idx:0,
+      secondsLeft:data.secondsLeft ?? data.exam.duration*60, timerId:null, autoSaveId:null,
+      attemptId: data.attemptId,
+      cameraStream:null, cameraError:null, tabSwitchCount:0, lastWarning:null, lastFlagTime:0,
+      isFullscreen: isDocFullscreen(),
+    };
+    state.view = 'student-exam';
+    render();
+    startTimer();
+    startAutoSave();
+    initProctoring();
+  }catch(e){ showToast(e.message); }
+}
+
+/* ---------------- proctoring: webcam, fullscreen + tab/app switch detection ---------------- */
+function isDocFullscreen(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+}
+function requestExamFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if(req){ req.call(el).catch(()=>{}); }
+}
+function exitExamFullscreen(){
+  if(!isDocFullscreen()) return;
+  const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  if(exit){ try{ exit.call(document); }catch(e){} }
+}
+function logProctorEvent(event, message){
+  const sess = state.examSession;
+  if(!sess || !sess.attemptId) return;
+  apiFetch('/attempts/'+sess.attemptId+'/proctor', {method:'PATCH', body: JSON.stringify({event, message})}).catch(()=>{});
+}
+
+function initProctoring(){
+  const sess = state.examSession;
+  if(!sess) return;
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:true, audio:false}).then(stream=>{
+      if(!state.examSession){ stream.getTracks().forEach(t=>t.stop()); return; }
+      state.examSession.cameraStream = stream;
+      state.examSession.cameraError = null;
+      logProctorEvent('camera_active');
+      render();
+    }).catch(()=>{
+      if(state.examSession){
+        state.examSession.cameraError = 'Camera access denied. Please allow camera permission — this exam is proctored.';
+        logProctorEvent('camera_error');
+        render();
+      }
+    });
+  } else {
+    sess.cameraError = 'Camera not supported in this browser.';
+    logProctorEvent('camera_error');
+  }
+  document.addEventListener('visibilitychange', handleProctorVisibility);
+  window.addEventListener('blur', handleProctorBlur);
+  ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>
+    document.addEventListener(evt, handleProctorFullscreenChange));
+}
+
+function stopProctoring(){
+  document.removeEventListener('visibilitychange', handleProctorVisibility);
+  window.removeEventListener('blur', handleProctorBlur);
+  ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>
+    document.removeEventListener(evt, handleProctorFullscreenChange));
+  if(state.examSession&&state.examSession.autoSaveId)clearInterval(state.examSession.autoSaveId);
+  if(state.examSession&&state.examSession.autoSaveId)clearInterval(state.examSession.autoSaveId);
+  if(state.examSession && state.examSession.cameraStream){
+    state.examSession.cameraStream.getTracks().forEach(t=>t.stop());
+    state.examSession.cameraStream = null;
+  }
+  exitExamFullscreen();
+}
+
+function attachProctorVideo(){
+  const sess = state.examSession;
+  const video = document.getElementById('proctor-video');
+  if(video && sess && sess.cameraStream && video.srcObject !== sess.cameraStream){
+    video.srcObject = sess.cameraStream;
+  }
+}
+
+function handleProctorVisibility(){
+  if(document.hidden) flagProctorEvent('You switched away from this tab or minimized the window.');
+}
+function handleProctorBlur(){
+  // Catches switching to another application/window while the tab stays visible.
+  if(!document.hidden) flagProctorEvent('This exam window lost focus — another app or window was opened.');
+}
+function handleProctorFullscreenChange(){
+  const sess = state.examSession;
+  if(!sess) return;
+  const full = isDocFullscreen();
+  sess.isFullscreen = full;
+  if(!full) flagProctorEvent('You exited fullscreen mode.');
+  render();
+}
+function flagProctorEvent(reason){
+  const sess = state.examSession;
+  if(!sess) return;
+  const now = Date.now();
+  if(now - (sess.lastFlagTime||0) < 1500) return; // debounce duplicate blur+visibility+fullscreen firings
+  sess.lastFlagTime = now;
+  sess.tabSwitchCount = (sess.tabSwitchCount||0) + 1;
+  sess.lastWarning = `Warning ${sess.tabSwitchCount}: ${reason} This activity has been logged.`;
+  logProctorEvent('violation', sess.lastWarning);
+  showToast('⚠️ Proctoring violation detected — incident logged.');
+  render();
+}
+async function saveExamAnswers(){
+  const sess=state.examSession;
+  if(!sess||!sess.attemptId)return;
+  try{
+    const r=await apiFetch('/exams/'+sess.examId+'/attempt/'+sess.attemptId+'/answers',{
+      method:'PATCH',
+      body:JSON.stringify({answers:sess.answers})
+    });
+    if(state.examSession)state.examSession.secondsLeft=r.secondsLeft;
+  }catch(e){
+    if(e.message.includes('expired'))submitExam(true);
+  }
+}
+function startAutoSave(){
+  clearInterval(state.examSession.autoSaveId);
+  state.examSession.autoSaveId=setInterval(saveExamAnswers,5000);
+}
+function startTimer(){
+  clearInterval(state.examSession.timerId);
+  state.examSession.timerId = setInterval(()=>{
+    if(!state.examSession) return;
+    state.examSession.secondsLeft--;
+    if(state.examSession.secondsLeft<=0){
+      clearInterval(state.examSession.timerId);
+      submitExam(true);
+      return;
+    }
+    const t = document.getElementById('exam-timer-display');
+    const box = document.getElementById('exam-timer-box');
+    if(t){
+      t.textContent = fmtTime(state.examSession.secondsLeft);
+      if(box && state.examSession.secondsLeft<=60) box.classList.add('low');
+    }
+  },1000);
+}
+function fmtTime(s){
+  const m = Math.floor(s/60).toString().padStart(2,'0');
+  const sec = (s%60).toString().padStart(2,'0');
+  return `${m}:${sec}`;
+}
+
+function studentExam(){
+  const sess = state.examSession;
+  if(!sess) return '';
+  const exam = sess.exam;
+  const questions = sess.questions;
+  const q = questions[sess.idx];
+  const answeredCount = Object.keys(sess.answers).length;
+  const pct = Math.round((answeredCount/questions.length)*100);
+  const navGrid = questions.map((qq,i)=>{
+    const answered = sess.answers[qq.id]!==undefined;
+    return `<button class="qnav-btn ${answered?'answered':''} ${i===sess.idx?'current':''}" data-action="goto-q" data-idx="${i}">${i+1}</button>`;
+  }).join('');
+  let body='';
+  if(q.type==='Descriptive'){
+    body = `<textarea id="desc-answer" placeholder="Type your answer here…" style="width:100%;min-height:160px;border:1.5px solid var(--line);border-radius:9px;padding:14px;font-size:14.5px;">${sess.answers[q.id]||''}</textarea>`;
+  } else {
+    body = q.options.map((opt,i)=>`
+      <div class="option ${sess.answers[q.id]===i?'selected':''}" data-action="select-option" data-qid="${q.id}" data-i="${i}">
+        <div class="radio"></div>${opt}
+      </div>`).join('');
+  }
+  return `
+  <div class="exam-shell">
+    <div class="nav-panel">
+      <div class="proctor-box">
+        ${sess.cameraStream
+          ? `<video id="proctor-video" class="proctor-video" autoplay muted playsinline></video>`
+          : `<div class="proctor-placeholder">${sess.cameraError || '📷 Requesting camera access…'}</div>`}
+        <div class="proctor-status ${sess.cameraStream?'':'off'}"><span class="dot"></span>${sess.cameraStream? 'Camera monitoring active' : 'Camera not active'}</div>
+      </div>
+      <div style="font-family:var(--serif);font-weight:600;font-size:15px;">${exam.title}</div>
+      <div class="exam-meta" style="margin-top:2px;">${exam.subject}</div>
+      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin-top:14px;">
+        <span>Overall Progress</span><span class="mono">${answeredCount}/${questions.length}</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      <div class="qnav-grid">${navGrid}</div>
+      <div class="qnav-legend">
+        <span><span class="legend-dot" style="background:var(--ink);"></span>Answered</span>
+        <span><span class="legend-dot" style="background:var(--paper);border:1.5px solid var(--line);"></span>Pending</span>
+      </div>
+      <div class="tabwatch-pill ${sess.tabSwitchCount?'flagged':''}">
+        <span>🔍 Tab/app switches</span><span class="mono">${sess.tabSwitchCount||0}</span>
+      </div>
+    </div>
+    <div>
+      <div id="exam-timer-box" class="timer-box">
+        <span>⏱ Time remaining</span>
+        <span id="exam-timer-display" class="t">${fmtTime(sess.secondsLeft)}</span>
+      </div>
+      ${sess.lastWarning ? `<div class="proctor-warning-banner"><span class="ic">⚠️</span><span>${sess.lastWarning}</span></div>` : ''}
+      ${!sess.isFullscreen ? `<div class="proctor-warning-banner"><span class="ic">🖥️</span><span>This exam should be taken in fullscreen.</span><button class="btn small primary" style="margin-left:auto;" data-action="reenter-fullscreen">Enter fullscreen</button></div>` : ''}
+      <div class="question-card">
+        <span class="q-tag">Question ${sess.idx+1} · ${q.marks} marks · ${q.type}</span>
+        <p class="q-text">${q.text}</p>
+        ${body}
+        <div class="exam-nav-row">
+          <button class="btn ghost" data-action="prev-q" ${sess.idx===0?'disabled':''}>← Previous</button>
+          ${sess.idx===questions.length-1
+            ? `<button class="btn primary" data-action="confirm-submit">✓ Submit Final Exam</button>`
+            : `<button class="btn ghost" data-action="next-q">Next →</button>`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function submitExam(auto){
+  const sess = state.examSession;
+  if(!sess) return;
+  clearInterval(sess.timerId);
+  if(sess.autoSaveId) clearInterval(sess.autoSaveId);
+  stopProctoring();
+  try{
+    const summary = await apiFetch('/exams/'+sess.examId+'/submit', {method:'POST', body: JSON.stringify({answers: sess.answers})});
+    state.examSession = null;
+    state.lastResult = summary;
+    state.view = 'student-result';
+    state.modal = null;
+    try{ exams = await apiFetch('/exams'); }catch(e){}
+    showToast(auto? 'Time is up — exam submitted automatically.' : 'Exam submitted successfully.');
+    render();
+  }catch(e){
+    showToast(e.message);
+    render();
+  }
+}
+
+function studentResult(){
+  const r = state.lastResult;
+  if(!r) return `<div class="empty-state">No result to display.</div>`;
+  const pct = r.total? Math.round((r.obtained/r.total)*100):0;
+  const pass = pct >= r.passingPercent;
+  const circumference = 2*Math.PI*54;
+  const dash = circumference*(pct/100);
+  return `
+  <div class="perf-grid">
+    <div class="card" style="text-align:center;">
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg width="150" height="150" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="var(--line-soft)" stroke-width="12"/>
+            <circle cx="65" cy="65" r="54" fill="none" stroke="${pass?'var(--success)':'var(--accent)'}" stroke-width="12"
+              stroke-dasharray="${dash} ${circumference}" stroke-linecap="round"/>
+          </svg>
+          <div class="donut-label"><div class="pct">${pct}%</div><div class="frac">Score: ${r.obtained}/${r.total}</div></div>
+        </div>
+        <div class="grade-chip" style="${pass?'':'background:var(--danger-soft);color:var(--danger);'}">${pass? 'PASS':'FAIL'} ${r.status==='partial'? '· pending manual review':''}</div>
+      </div>
+      <div style="text-align:left;margin-top:18px;border-top:1px dashed var(--line);padding-top:14px;">
+        <div class="eyebrow" style="margin-bottom:8px;">Ranking</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Rank in this exam</span><b class="mono">${r.rank} of ${r.totalAttempts}</b></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="eyebrow" style="margin-bottom:10px;">Subject performance</div>
+        ${r.subjectPerf.map(s=>`
+          <div class="subject-bar-row">
+            <div class="sb-top"><span>${s.name}</span><span class="mono">${s.pct}%</span></div>
+            <div class="subject-bar-track"><div class="subject-bar-fill" style="width:${s.pct}%;"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px;">Feedback &amp; insights</div>
+        <div class="feedback-box good"><b>✓ Auto-graded</b>Objective questions (MCQ / True-False) are scored instantly on submission.</div>
+        <div class="feedback-box improve"><b>↗ Status</b>${r.status==='partial'? 'Descriptive answers are awaiting faculty evaluation — your score will update once reviewed.':'All sections have been graded.'}</div>
+        <div style="display:flex;gap:10px;margin-top:14px;">
+          <button class="btn ghost small" data-action="nav" data-view="student-dashboard">← Back to exams</button>
+          <button class="btn primary small" data-action="download-result">⬇ Download Result PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ================= FACULTY ================= */
+function facultyDashboard(){
+  const pendingCount = evaluationQueue.filter(e=>e.status==='pending').length;
+  return `
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">${questionBank.length}</div><div class="lbl">Questions in bank</div></div>
+      <div class="stat-card"><div class="num">${exams.length}</div><div class="lbl">Exams created</div></div>
+      <div class="stat-card"><div class="num">${pendingCount}</div><div class="lbl">Pending evaluations</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Active').length}</div><div class="lbl">Live now</div></div>
+    </div>
+    <div class="section-title">📝 Examinations</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Exam</th><th>Subject</th><th>When</th><th>Duration</th><th>Total marks</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          ${exams.map(e=>`<tr><td><b>${e.title}</b></td><td>${e.subject}</td><td class="mono" style="font-size:12px;">${fmtDate(e.schedule)}</td><td>${e.duration} min</td><td>${e.totalMarks}</td><td>${statusPill(e.status)}</td><td>${examStatusActions(e)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    ${pendingCount? `<div class="section-title" style="margin-top:24px;">✒️ Needs your attention</div>
+    <div class="exam-list">${evaluationQueue.filter(e=>e.status==='pending').slice(0,3).map(ev=>`
+      <div class="exam-row">
+        <div><h3 style="font-size:14.5px;">${ev.student} — ${ev.examTitle}</h3><div class="exam-meta">Max ${ev.maxMarks} marks · awaiting review</div></div>
+        <button class="btn ghost small" data-action="nav" data-view="faculty-evaluate">Grade →</button>
+      </div>`).join('')}</div>`:''}
+  `;
+}
+function statusPill(s){
+  if(s==='Active') return `<span class="pill success">● active</span>`;
+  if(s==='Scheduled') return `<span class="pill warn">● scheduled</span>`;
+  return `<span class="pill neutral">● ${s.toLowerCase()}</span>`;
+}
+function examStatusActions(e){
+  if(e.status==='Scheduled') return `<button class="btn small primary" data-action="set-exam-status" data-id="${e.id}" data-status="Active">▶ Open now</button>`;
+  if(e.status==='Active') return `<button class="btn small ghost" data-action="set-exam-status" data-id="${e.id}" data-status="Completed">⏸ Close</button>`;
+  if(e.status==='Completed') return `<button class="btn small ghost" data-action="set-exam-status" data-id="${e.id}" data-status="Active">↺ Reopen</button>`;
+  return '';
+}
+
+function facultyQuestions(){
+  return `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="btn primary" data-action="open-add-question">+ Add question</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Question</th><th>Subject</th><th>Type</th><th>Marks</th><th></th></tr></thead>
+        <tbody>
+          ${questionBank.map(q=>`<tr>
+            <td style="max-width:340px;">${q.text}</td>
+            <td>${q.subject}</td>
+            <td><span class="pill neutral">${q.type}</span></td>
+            <td class="mono">${q.marks}</td>
+            <td><button class="icon-btn" data-action="delete-question" data-id="${q.id}" title="Delete">🗑</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function facultyCreateExam(){
+  return `
+    <div class="card" style="max-width:640px;">
+      <div class="grid2">
+        <div class="field"><label>Exam title</label><input id="ce-title" placeholder="e.g. Unit Test 2 — Algebra"></div>
+        <div class="field"><label>Subject</label><input id="ce-subject" placeholder="e.g. Mathematics"></div>
+        <div class="field"><label>Duration (minutes)</label><input id="ce-duration" type="number" value="30"></div>
+        <div class="field"><label>Passing percentage</label><input id="ce-pass" type="number" value="40"></div>
+      </div>
+      <div class="field">
+        <label>When should this exam open?</label>
+        <select id="ce-availability" onchange="document.getElementById('ce-schedule-wrap').classList.toggle('hidden', this.value!=='later')">
+          <option value="now">Open immediately (students can attempt right away)</option>
+          <option value="later" selected>Schedule for a specific date &amp; time</option>
+        </select>
+      </div>
+      <div class="field" id="ce-schedule-wrap">
+        <label>Exam date &amp; time</label>
+        <input id="ce-schedule-date" type="datetime-local">
+        <p style="font-size:11.5px;color:var(--ink-soft);margin:6px 0 0;">The exam stays in "Scheduled" status until you flip it to "Active" from the Overview table (or here once the date arrives).</p>
+      </div>
+      <div class="field">
+        <label>Select questions from bank</label>
+        <div style="border:1.5px solid var(--line);border-radius:8px;max-height:220px;overflow-y:auto;">
+          ${questionBank.map(q=>`
+            <label style="display:flex;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line-soft);font-size:13px;">
+              <input type="checkbox" class="ce-qcheck" value="${q.id}"> ${q.text} <span class="mono" style="margin-left:auto;color:var(--ink-soft);">${q.marks} pts</span>
+            </label>`).join('')}
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:16px;">
+        <input type="checkbox" id="ce-random" checked> Randomize question order for each student
+      </label>
+      <button class="btn primary" data-action="create-exam" style="width:100%;justify-content:center;">Create examination</button>
+    </div>`;
+}
+
+function facultyEvaluate(){
+  const pending = evaluationQueue.filter(e=>e.status==='pending');
+  const graded = evaluationQueue.filter(e=>e.status==='graded');
+  if(!pending.length && !graded.length) return `<div class="empty-state"><div class="ic">✒️</div>No descriptive answers to evaluate yet.</div>`;
+  return `
+    ${pending.length? `<div class="section-title">Pending (${pending.length})</div>` + pending.map(ev=>`
+      <div class="card" style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <div><b>${ev.student}</b> <span class="exam-meta">· ${ev.examTitle}</span></div>
+          <span class="pill warn">pending</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 6px;font-style:italic;">${ev.questionText}</p>
+        <div style="background:var(--paper);border:1px solid var(--line-soft);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:12px;">${ev.answerText}</div>
+        <div class="grid2">
+          <div class="field" style="margin-bottom:8px;"><label>Marks (out of ${ev.maxMarks})</label><input type="number" max="${ev.maxMarks}" min="0" id="marks-${ev.id}"></div>
+          <div class="field" style="margin-bottom:8px;"><label>Feedback</label><input type="text" id="fb-${ev.id}" placeholder="Short comment for the student"></div>
+        </div>
+        <button class="btn primary small" data-action="grade-answer" data-id="${ev.id}">Save grade</button>
+      </div>`).join('') : ''}
+    ${graded.length? `<div class="section-title" style="margin-top:8px;">Graded (${graded.length})</div>` + graded.map(ev=>`
+      <div class="exam-row">
+        <div><h3 style="font-size:14px;">${ev.student} — ${ev.examTitle}</h3><div class="exam-meta">${ev.feedback||'No comment'}</div></div>
+        <span class="pill success">${ev.marksAwarded}/${ev.maxMarks}</span>
+      </div>`).join('') : ''}
+  `;
+}
+
+function renderProctoringTable(rows){
+  if(!rows || !rows.length) return `<div class="empty-state"><div class="ic">🎥</div>No exam attempts yet.</div>`;
+  return `<div class="table-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>Exam</th><th>Status</th><th>Camera</th><th>Tab/App switches</th><th>Last flag</th></tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td><b>${r.student}</b></td>
+          <td>${r.examTitle}</td>
+          <td>${r.status==='in_progress' ? '<span class="pill warn">● in progress</span>' : r.status==='submitted' ? '<span class="pill success">● submitted</span>' : `<span class="pill neutral">${r.status}</span>`}</td>
+          <td>${r.cameraEnabled ? '<span class="pill success">🎥 on</span>' : '<span class="pill danger">🎥 off</span>'}</td>
+          <td>${r.tabSwitchCount>0 ? `<span class="pill danger">${r.tabSwitchCount}</span>` : `<span class="pill neutral">0</span>`}</td>
+          <td style="max-width:280px;font-size:12px;color:var(--ink-soft);">${r.lastWarning || '—'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function facultyMonitoring(){
+  const live = proctoringLog.filter(r=>r.status==='in_progress');
+  const flagged = proctoringLog.filter(r=>r.tabSwitchCount>0 || (r.status==='in_progress' && !r.cameraEnabled));
+  return `
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">${live.length}</div><div class="lbl">Live attempts</div></div>
+      <div class="stat-card"><div class="num">${live.filter(r=>r.cameraEnabled).length}</div><div class="lbl">Cameras active</div></div>
+      <div class="stat-card"><div class="num">${proctoringLog.reduce((s,r)=>s+(r.tabSwitchCount||0),0)}</div><div class="lbl">Total flagged switches</div></div>
+      <div class="stat-card"><div class="num">${flagged.length}</div><div class="lbl">Attempts flagged</div></div>
+    </div>
+    <div class="section-title">🎥 Camera &amp; tab-switch activity</div>
+    ${renderProctoringTable(proctoringLog)}
+  `;
+}
+
+/* ================= ADMIN ================= */
+function adminDashboard(){
+  return `
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">${systemUsers.length}</div><div class="lbl">Total users</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Active').length}</div><div class="lbl">Live exams</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Scheduled').length}</div><div class="lbl">Scheduled</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Completed').length}</div><div class="lbl">Completed</div></div>
+    </div>
+    <div class="section-title">Quick access modules</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="card" data-action="nav" data-view="admin-users" style="cursor:pointer;">
+        <div style="font-size:22px;">👥</div><h3 style="font-family:var(--serif);margin:10px 0 4px;">Manage Users</h3>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0;">Add, edit, or remove student and faculty accounts.</p>
+      </div>
+      <div class="card" data-action="nav" data-view="admin-schedule" style="cursor:pointer;">
+        <div style="font-size:22px;">🗓</div><h3 style="font-family:var(--serif);margin:10px 0 4px;">Schedule Examination</h3>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0;">Set up exam dates, durations and parameters.</p>
+      </div>
+      <div class="card" data-action="nav" data-view="admin-status" style="cursor:pointer;">
+        <div style="font-size:22px;">📈</div><h3 style="font-family:var(--serif);margin:10px 0 4px;">View Exam Status</h3>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0;">Monitor live progress and completed assessments.</p>
+      </div>
+    </div>`;
+}
+
+function adminUsers(){
+  return `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="btn primary" data-action="open-add-user">+ Add user</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          ${systemUsers.map(u=>`<tr>
+            <td><b>${u.name}</b></td><td class="mono">${u.username}</td>
+            <td><span class="pill neutral">${u.role}</span></td>
+            <td>${u.status==='active'?'<span class="pill success">active</span>':'<span class="pill danger">suspended</span>'}</td>
+            <td><button class="icon-btn" data-action="toggle-user" data-id="${u.id}" title="Toggle status">⇄</button>
+                <button class="icon-btn" data-action="delete-user" data-id="${u.id}" title="Remove">🗑</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function adminSchedule(){
+  return `
+    <div class="card" style="max-width:600px;margin-bottom:24px;">
+      <div class="grid2">
+        <div class="field"><label>Exam title</label><input id="sc-title" placeholder="e.g. Semester Finals — Physics"></div>
+        <div class="field"><label>Subject</label><input id="sc-subject" placeholder="e.g. Physics"></div>
+        <div class="field"><label>Date &amp; time</label><input id="sc-date" type="datetime-local"></div>
+        <div class="field"><label>Duration (minutes)</label><input id="sc-duration" type="number" value="60"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:6px;">
+        <input type="checkbox" id="sc-open-now"> Open immediately instead (skip the schedule above)
+      </label>
+      <div class="field"><label>Select questions</label><div style="border:1.5px solid var(--line);border-radius:8px;max-height:180px;overflow-y:auto;">${questionBank.map(q=>`<label style="display:flex;gap:8px;padding:8px 10px;font-size:12px;border-bottom:1px solid var(--line-soft);"><input type="checkbox" class="sc-qcheck" value="${q.id}">${q.text}<span class="mono" style="margin-left:auto;">${q.marks}</span></label>`).join('')}</div></div><p style="font-size:12px;color:var(--ink-soft);margin:0 0 14px;">Selected questions are attached immediately. Students cannot start before the scheduled time.</p>
+      <button class="btn primary" data-action="schedule-exam" style="width:100%;justify-content:center;">Schedule examination</button>
+    </div>
+    <div class="section-title">All examinations</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Exam</th><th>Subject</th><th>Schedule</th><th>Duration</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          ${exams.map(e=>`<tr><td><b>${e.title}</b></td><td>${e.subject}</td><td class="mono" style="font-size:12px;">${fmtDate(e.schedule)}</td><td>${e.duration} min</td><td>${statusPill(e.status)}</td><td>${examStatusActions(e)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function adminStatus(){
+  return `
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Active').length}</div><div class="lbl">Currently live</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Completed').length}</div><div class="lbl">Completed</div></div>
+      <div class="stat-card"><div class="num">${exams.filter(e=>e.status==='Scheduled').length}</div><div class="lbl">Scheduled</div></div>
+      <div class="stat-card"><div class="num">${evaluationQueue.filter(e=>e.status==='pending').length}</div><div class="lbl">Evaluations pending</div></div>
+    </div>
+    <div class="section-title">Examinations</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Exam</th><th>Subject</th><th>Schedule</th><th>Status</th><th>Duration</th><th></th></tr></thead>
+        <tbody>
+          ${exams.map(e=>`<tr><td><b>${e.title}</b></td><td>${e.subject}</td><td class="mono" style="font-size:12px;">${fmtDate(e.schedule)}</td><td>${statusPill(e.status)}</td><td>${e.duration} min</td><td>${examStatusActions(e)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="section-title" style="margin-top:24px;">🎥 Proctoring — camera &amp; tab-switch activity</div>
+    ${renderProctoringTable(proctoringLog)}`;
+}
+
+/* ================= MODALS ================= */
+function renderModal(){
+  const m = state.modal;
+  if(!m) return '';
+  if(m.type==='add-question'){
+    return `<div class="modal-overlay" data-action="close-modal">
+      <div class="modal" data-stop="1">
+        <h2>Add question</h2>
+        <p class="modal-sub">This question will be added to the shared question bank.</p>
+        <div class="field"><label>Question text</label><textarea id="nq-text"></textarea></div>
+        <div class="grid2">
+          <div class="field"><label>Subject</label><input id="nq-subject" placeholder="e.g. Mathematics"></div>
+          <div class="field"><label>Type</label>
+            <select id="nq-type">
+              <option value="MCQ">MCQ</option>
+              <option value="TF">True / False</option>
+              <option value="Descriptive">Descriptive</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Marks</label><input id="nq-marks" type="number" value="5"></div>
+        <div id="nq-options-wrap" class="field">
+          <label>Options (comma separated, MCQ / TF only)</label>
+          <input id="nq-options" placeholder="Option A, Option B, Option C, Option D">
+          <label style="margin-top:8px;">Correct option index (0-based)</label>
+          <input id="nq-correct" type="number" value="0">
+        </div>
+        <div class="modal-actions">
+          <button class="btn ghost" data-action="close-modal">Cancel</button>
+          <button class="btn primary" data-action="save-question">Save question</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  if(m.type==='add-user'){
+    return `<div class="modal-overlay" data-action="close-modal">
+      <div class="modal" data-stop="1">
+        <h2>Add user</h2>
+        <p class="modal-sub">Choose a password for the new account (minimum 6 characters).</p>
+        <div class="field"><label>Full name</label><input id="nu-name" placeholder="e.g. Kavya Suresh"></div>
+        <div class="field"><label>Username</label><input id="nu-username" placeholder="e.g. kavya.suresh"></div>
+        <div class="field"><label>Password</label><input id="nu-password" type="password" placeholder="At least 6 characters"></div>
+        <div class="field"><label>Password</label><input id="nu-password" type="password" placeholder="At least 6 characters"></div>
+        <div class="field"><label>Role</label>
+          <select id="nu-role">
+            <option value="student">Student</option>
+            <option value="faculty">Faculty</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn ghost" data-action="close-modal">Cancel</button>
+          <button class="btn primary" data-action="save-user">Add user</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  if(m.type==='confirm-submit'){
+    const sess = state.examSession;
+    const answered = sess? Object.keys(sess.answers).length : 0;
+    const totalQ = sess? sess.questions.length : 0;
+    return `<div class="modal-overlay" data-action="close-modal">
+      <div class="modal" data-stop="1" style="max-width:380px;">
+        <h2>Submit final exam?</h2>
+        <p class="modal-sub">You've answered ${answered} of ${totalQ} questions. This action cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn ghost" data-action="close-modal">Keep reviewing</button>
+          <button class="btn primary" data-action="do-submit-exam">Submit exam</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ================= EVENT BINDING ================= */
+function bindEvents(){
+  const app = document.getElementById('app');
+  app.querySelectorAll('[data-action]').forEach(el=>{
+    el.addEventListener('click', (evt)=>{
+      handleAction(el.dataset.action, el, evt);
+    });
+  });
+  app.querySelectorAll('[data-stop]').forEach(el=>{
+    el.addEventListener('click', e=>e.stopPropagation());
+  });
+  const loginUsername = document.getElementById('login-username');
+  if(loginUsername){
+    loginUsername.addEventListener('keydown', e=>{ if(e.key==='Enter') handleAction('login'); });
+  }
+  const loginPassword = document.getElementById('login-password');
+  if(loginPassword){
+    loginPassword.addEventListener('keydown', e=>{ if(e.key==='Enter') handleAction('login'); });
+  }
+}
+
+function val(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
+function saveCurrentDescriptive(){
+  const sess = state.examSession; if(!sess) return;
+  const q = sess.questions[sess.idx];
+  if(q.type==='Descriptive'){
+    const ta = document.getElementById('desc-answer');
+    if(ta) sess.answers[q.id] = ta.value.trim() || undefined;
+    if(sess.answers[q.id]===undefined) delete sess.answers[q.id];
+  }
+}
+
+async function loadInitialData(){
+  try{ questionBank = await apiFetch('/questions'); }catch(e){}
+  try{ exams = await apiFetch('/exams'); }catch(e){}
+  if(state.user.role==='student'){
+    try{ state.studentResultsList = await apiFetch('/attempts/me'); }catch(e){}
+  }
+  if(state.user.role==='faculty' || state.user.role==='admin'){
+    try{ evaluationQueue = await apiFetch('/evaluations'); }catch(e){}
+  }
+  if(state.user.role==='admin'){
+    try{ systemUsers = await apiFetch('/users'); }catch(e){}
+  }
+}
+
+async function refreshForView(view){
+  try{
+    if(view==='faculty-evaluate'){ evaluationQueue = await apiFetch('/evaluations'); render(); }
+    else if(view==='admin-users'){ systemUsers = await apiFetch('/users'); render(); }
+    else if(view==='admin-status'){ exams = await apiFetch('/exams'); proctoringLog = await apiFetch('/attempts/proctoring'); render(); }
+    else if(view==='faculty-monitoring'){ proctoringLog = await apiFetch('/attempts/proctoring'); render(); }
+    else if(['admin-schedule','faculty-dashboard','student-dashboard'].includes(view)){ exams = await apiFetch('/exams'); render(); }
+    else if(['faculty-questions','faculty-createexam'].includes(view)){ questionBank = await apiFetch('/questions'); render(); }
+    else if(view==='student-results'){ state.studentResultsList = await apiFetch('/attempts/me'); render(); }
+  }catch(e){ /* silent background refresh failure */ }
+
+  clearInterval(monitorPollId);
+  if(view==='faculty-monitoring' || view==='admin-status'){
+    monitorPollId = setInterval(()=>{
+      if(state.view==='faculty-monitoring' || state.view==='admin-status') refreshForView(state.view);
+      else clearInterval(monitorPollId);
+    }, 5000);
+  }
+}
+
+async function handleAction(action, el, evt){
+  switch(action){
+    case 'set-role': state.loginRole = el.dataset.role; render(); break;
+    case 'toggle-pw': state.showPw = !state.showPw; render(); break;
+
+    case 'login': {
+      const username = val('login-username') || SEED_USERNAMES[state.loginRole];
+      const password = val('login-password') || 'demo1234';
+      state.busy = true; render();
+      try{
+        const data = await apiFetch('/auth/login', {method:'POST', body: JSON.stringify({username, password})});
+        localStorage.setItem('examease_token', data.token);
+        localStorage.setItem('examease_user', JSON.stringify(data.user));
+        state.user = data.user;
+        state.view = data.user.role + '-dashboard';
+        await loadInitialData();
+      }catch(e){ showToast(e.message); }
+      state.busy = false; render();
+      break;
+    }
+    case 'logout':
+      if(state.examSession){ clearInterval(state.examSession.timerId); stopProctoring(); }
+      clearInterval(monitorPollId);
+      localStorage.removeItem('examease_token'); localStorage.removeItem('examease_user');
+      state.user=null; state.view='login'; state.examSession=null; render(); break;
+
+    case 'nav':
+      if(state.examSession && el.dataset.view!=='student-exam'){ saveCurrentDescriptive();saveExamAnswers();clearInterval(state.examSession.timerId);stopProctoring();state.examSession=null;showToast('Exam paused. Saved answers will be restored when you reopen it.'); }
+      state.view = el.dataset.view; render();
+      refreshForView(state.view);
+      break;
+
+    case 'start-exam': startExam(el.dataset.id); break;
+    case 'view-result': {
+      const attemptId = el.dataset.attemptid;
+      try{
+        state.lastResult = await apiFetch('/attempts/'+attemptId+'/summary');
+        state.view='student-result'; render();
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+    case 'download-result': {const r=state.lastResult;if(!r)break;try{const rr=await fetch(API_BASE+'/attempts/'+r.attemptId+'/pdf',{headers:{Authorization:'Bearer '+getToken()}});if(!rr.ok)throw new Error('Could not generate PDF');const b=await rr.blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=(r.examTitle||'Exam')+'_result.pdf';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}catch(e){showToast(e.message)}break;}
+
+    case 'reenter-fullscreen': requestExamFullscreen(); break;
+
+    case 'select-option': state.examSession.answers[el.dataset.qid]=parseInt(el.dataset.i);saveExamAnswers();render();break;
+    case 'goto-q': saveCurrentDescriptive();saveExamAnswers();state.examSession.idx=parseInt(el.dataset.idx);render();break;
+    case 'prev-q': saveCurrentDescriptive();saveExamAnswers();state.examSession.idx=Math.max(0,state.examSession.idx-1);render();break;
+    case 'next-q': saveCurrentDescriptive();saveExamAnswers();state.examSession.idx=Math.min(state.examSession.questions.length-1,state.examSession.idx+1);render();break;
+    case 'confirm-submit': saveCurrentDescriptive(); state.modal = {type:'confirm-submit'}; render(); break;
+    case 'do-submit-exam': submitExam(false); break;
+
+    case 'open-add-question': state.modal = {type:'add-question'}; render(); break;
+    case 'save-question': {
+      const text = val('nq-text'), subject = val('nq-subject'), type = val('nq-type'), marks = parseInt(val('nq-marks')||'5');
+      if(!text){ showToast('Question text is required.'); return; }
+      const payload = {text, subject: subject||'General', type, marks};
+      if(type!=='Descriptive'){
+        payload.options = val('nq-options').split(',').map(s=>s.trim()).filter(Boolean);
+        if(!payload.options.length) payload.options = ['Option A','Option B'];
+        payload.correctIndex = parseInt(val('nq-correct')||'0');
+      }
+      try{
+        const q = await apiFetch('/questions', {method:'POST', body: JSON.stringify(payload)});
+        questionBank.push(q);
+        state.modal=null; render(); showToast('Question added to bank.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+    case 'delete-question': {
+      try{
+        await apiFetch('/questions/'+el.dataset.id, {method:'DELETE'});
+        questionBank = questionBank.filter(q=>q.id!==el.dataset.id);
+        render(); showToast('Question removed.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'create-exam': {
+      const title = val('ce-title'), subject = val('ce-subject');
+      const duration = parseInt(val('ce-duration')||'30');
+      const passingPercent = parseInt(val('ce-pass')||'40');
+      const checked = [...document.querySelectorAll('.ce-qcheck:checked')].map(c=>c.value);
+      if(!title || !checked.length){ showToast('Add a title and select at least one question.'); return; }
+      const openNow = val('ce-availability')==='now';
+      const scheduleRaw = val('ce-schedule-date');
+      if(!openNow && !scheduleRaw){ showToast('Pick a date & time, or choose "Open immediately".'); return; }
+      const schedule = openNow ? 'Open now' : new Date(scheduleRaw).toISOString();
+      try{
+        const exam = await apiFetch('/exams', {method:'POST', body: JSON.stringify({
+          title, subject, duration, passingPercent, questionIds: checked,
+          randomize: document.getElementById('ce-random').checked,
+          schedule, openNow,
+        })});
+        exams.push(exam);
+        state.view='faculty-dashboard'; render();
+        showToast(openNow ? 'Exam created and opened for students.' : 'Exam created and scheduled.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'grade-answer': {
+      const id = el.dataset.id;
+      const marks = parseInt(val('marks-'+id));
+      const fb = val('fb-'+id);
+      if(isNaN(marks)){ showToast('Enter marks before saving.'); return; }
+      try{
+        await apiFetch('/evaluations/'+id, {method:'PATCH', body: JSON.stringify({marks, feedback:fb})});
+        evaluationQueue = await apiFetch('/evaluations');
+        render(); showToast('Grade saved.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'open-add-user': state.modal = {type:'add-user'}; render(); break;
+    case 'save-user': {
+      const name=val('nu-name'), username=val('nu-username'), role=val('nu-role'), password=val('nu-password');
+      if(!name||!username){ showToast('Name and username are required.'); return; }
+      try{
+        const u = await apiFetch('/users', {method:'POST', body: JSON.stringify({name, username, role, password})});
+        systemUsers.push(u);
+        state.modal=null; render(); showToast('User added successfully.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+    case 'toggle-user': {
+      try{
+        await apiFetch('/users/'+el.dataset.id+'/toggle', {method:'PATCH'});
+        systemUsers = await apiFetch('/users'); render();
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+    case 'delete-user': {
+      try{
+        await apiFetch('/users/'+el.dataset.id, {method:'DELETE'});
+        systemUsers = systemUsers.filter(u=>u.id!==el.dataset.id);
+        render(); showToast('User removed.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'schedule-exam': {
+      const title=val('sc-title'), subject=val('sc-subject'), dateRaw=val('sc-date'), duration=parseInt(val('sc-duration')||'60');
+      const questionIds=[...document.querySelectorAll('.sc-qcheck:checked')].map(c=>c.value); if(!questionIds.length){showToast('Select at least one question.');return;}
+      const openNow = document.getElementById('sc-open-now').checked;
+      if(!title){ showToast('Exam title is required.'); return; }
+      if(!openNow && !dateRaw){ showToast('Pick a date & time, or check "Open immediately".'); return; }
+      const schedule = openNow ? 'Open now' : new Date(dateRaw).toISOString();
+      try{
+        const exam = await apiFetch('/exams', {method:'POST', body: JSON.stringify({title, subject, duration, passingPercent:40, questionIds, randomize:false, schedule, openNow})});
+        exams.push(exam);
+        render(); showToast('Examination scheduled with selected questions.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'set-exam-status': {
+      const id = el.dataset.id, status = el.dataset.status;
+      try{
+        await apiFetch('/exams/'+id+'/status', {method:'PATCH', body: JSON.stringify({status})});
+        exams = await apiFetch('/exams'); render();
+        showToast(status==='Active' ? 'Exam is now open for students.' : 'Exam closed.');
+      }catch(e){ showToast(e.message); }
+      break;
+    }
+
+    case 'close-modal': state.modal=null; render(); break;
+  }
+}
+
+/* ---------------- boot ---------------- */
+(async function init(){
+  const token = localStorage.getItem('examease_token');
+  const userRaw = localStorage.getItem('examease_user');
+  if(token && userRaw){
+    try{
+      state.user = JSON.parse(userRaw);
+      state.view = state.user.role + '-dashboard';
+      await loadInitialData();
+    }catch(e){
+      localStorage.removeItem('examease_token'); localStorage.removeItem('examease_user');
+      state.user = null; state.view='login';
+    }
+  }
+  render();
+})();
+</script>
+</body>
+</html>

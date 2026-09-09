@@ -1,0 +1,16 @@
+{
+  "name": "examease",
+  "version": "1.0.0",
+  "description": "ExamEase - Online Examination and Evaluation System (Node/Express + SQLite backend, static frontend)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^11.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  }
+}
